@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:thi_kthp/model/product_model.dart';
 
 class ProductProvider extends ChangeNotifier{
-  List<ProductModel> list = [];
+  // List<ProductModel> list = [];
+  List<dynamic> list = [];
+  ProductModel p = ProductModel();
 
   void getList() async{  // async: bất đồng bộ
     // lấy ds sản phẩm từ fakestoreAPI
@@ -13,14 +15,26 @@ class ProductProvider extends ChangeNotifier{
     var client=http.Client();
     var rs = await client.get(Uri.parse(urlAPI)); // await: đợi vì đây là hàm bất đồng bộ
     var jsonString = rs.body;
-    var jsonObject = jsonDecode(jsonString) as List; // parse sang json theo kiểu danh sách/mảng
-    list = jsonObject.map((e) {  // duyệt hết ds rồi gán vào list
-      return ProductModel(
-        products: Products(
-          id: e['products']['id'],
-        )
+    var jsonObject = jsonDecode(jsonString);
+    var _jsonObject = jsonObject['products'];
+    list = _jsonObject.map((e) {  // duyệt hết ds rồi gán vào list
+      return Products(
+        id: e['id'],
+        title: e['title'],
+        description: e['description'],
+        price: e['price'],
+        discountPercentage: e['discountPercentage'],
+        rating: e['rating'],
+        stock: e['stock'],
+        thumbnail: e['thumbnail'],
+        brand: e['brand'],
+        category: e['category'],
       );
     }).toList();
+    p.total = jsonObject['total'];
+    p.skip = jsonObject['skip'];
+    p.limit = jsonObject['limit'];
+
     notifyListeners(); // thông báo đã lấy dữ liệu xong
   }
 }
