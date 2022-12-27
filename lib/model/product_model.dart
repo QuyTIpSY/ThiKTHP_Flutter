@@ -9,6 +9,7 @@ class Products{
   String? thumbnail;
   String? brand;
   String? category;
+  num? sl=1;
 
   Products(
       {

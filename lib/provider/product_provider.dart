@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:thi_kthp/model/product_model.dart';
 
 class ProductProvider extends ChangeNotifier{
-  // List<ProductModel> list = [];
+  List<Products> listcart = [];
   List<dynamic> list = [];
   ProductModel p = ProductModel();
 
@@ -36,6 +36,26 @@ class ProductProvider extends ChangeNotifier{
     p.limit = jsonObject['limit'];
 
     notifyListeners(); // thông báo đã lấy dữ liệu xong
+  }
+
+  void getListCart(Products e) {
+    if (listcart.isEmpty) {
+      listcart.add(e);
+    } else {
+      int kt = 0;
+      for (var element in listcart) {
+        if (element.id == e.id) {
+          kt = 1;
+          element.sl = (element.sl! + 1);
+          break;
+        }
+      }
+      if (kt == 0) {
+        listcart.add(e);
+      }
+    }
+
+    notifyListeners();
   }
 }
 
